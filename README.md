@@ -11,6 +11,6 @@ I'm way too scared to loose some files and i prefer putting them online. It's al
 
 # How is the repo organized ?
 
-Code files are in the code folder. The maths, physics and theorical computer science things behind are in the sciency-stuff folder. It also contains tex files that synthesize my results, comments, logs, references etc. Essentially, all that's interesting for academical purposes it in that folder, while the code itself is in the other folder.
+Code files are in the code branch. The maths, physics and theorical computer science things behind are in the sciency-stuff branch. It also contains tex files that synthesize my results, comments, logs, references etc. Essentially, all that's interesting for academical purposes it in that folder, while the code itself is in the other folder.
 
 Have fun swimming through this whole mess
