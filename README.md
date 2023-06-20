@@ -3,7 +3,7 @@ My submission for the 2023 TIPE (Travail d'Initiative Personelle Encadré). BGEY
 
 # What's the TIPE ?
 
-It's a project you conduct on a specific theme to present at your oral exams in CPGE (french schools made to enter engineering schools). It stands for (in english) supervised self-initiative work. Essentially, you're presented a theme (in 2023 it was Games and Sports) and you have to come up with a project that you will conduct entirely by yourself, in order to show your abilities at conceptualizing an idea, laying it down, making models to verify your idea, etc.
+It's a project you conduct on a specific theme to present at your oral exams in CPGE (french schools made to enter engineering schools). Essentially, you're presented a theme (in 2023 it was Games and Sports) and you have to come up with a project that you will conduct entirely by yourself, in order to show your abilities at conceptualizing an idea, laying it down, making models to verify your idea, etc.
 
 # Why a github repo ?
 
