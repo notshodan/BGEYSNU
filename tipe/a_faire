@@ -1,0 +1,7 @@
+- détermination des géodésiques
+- pavage de l'hyperboloïde
+- triangulation de delaunay
+- représentation des entités sur la surface
+- génération automatique / procédurale
+- visualisation efficace avec sdl
+- réflexions sur l'adaptabilité de moteurs déjà existants

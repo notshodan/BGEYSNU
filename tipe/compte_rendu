@@ -1,0 +1,51 @@
+- Le modèle utilisé est choisi : 
+le modèle de l'hyperboloïde est un modèle de géométrie hyperbolique étroitement 
+lié au modèle de Klein ou au disque de Poincaré ce qui facilite grandement les représentations.
+
+- la méthode de rendu également : 
+projeté d'une nappe d'un hyperboloïde d'équation z = sqrt(x²+y²+1) 
+sur le plan z = 1 pour obtenir le modèle de Klein et préserver les lignes "droites", 
+sur le plan z = 0 selon le point (0,0,-1) pour le modèle de poincaré et préserver les angles
+
+- discussions avec Henry Segerman 
+(un prof de maths avec une présence sur internet qui s'intéresse beaucoup à la géométrie non euclidienne) 
+et ZenoRogue (le développeur d'un jeu en géométrie non euclidienne) pour comprendre certains trucs de maths etc. 
+-> obtenu à l'issue de l'échange avec zenorogue : un brouillon d'un document en pdf qu'il 
+était en train décrire pour vulgariser certains de ses résultats
+
+- changé la librairie utilisée de SFML à SDL 
+(plus compliqué, mais plus complet et modulable pour ce que je veux faire (rendu, etc , et possibilité de coder en C plutôt qu'en C++)) 
+donc commencé à apprendre à l'utiliser
+
+- recommencé à coder le moteur côté technique 
+(ouverture d'une fenêtre, création d'un contexte OpenGL, gestion des évènements dans la fenêtre)
+
+
+modèle de l'hyperboloïde : 
+-> soient x0, ..., xn = x dans R. On définit le polynôme Q par Q(x) = x0² - x1² - ... - xn², 
+appelé forme quaratique de minkowski; les points satisfiant Q(x) = 1 forment un hyperboloïde à deux composantes connexes 
+(que l'on définit un peu comme les graphes en info)
+-> forme bilinéaire de minkowski : soient x = (x0, x1, ..., xn) et y = (y0, y1, ..., yn). alors :
+B(x,y) = (Q(x+y) - Q(x) - Q(y))/2 = x0y0 - ... - xnyn
+
+
+pour les géodésiques : 
+soit déterminer l'équation à la main, 
+soit A* dans la matrice que représente l'ensemble des points de l'hyperboloide, 
+soit projeter les deux points sur z=1 selon le modèle de klein, qui conserve les lignes droites, 
+établir une liste de points sur cette droite et les projeter sur la surface de l'hyperboloïde, 
+puis les reprojeter sur le plan y = 0 (hyperplan)
+
+méthodes d'optimisation : -> dl de la racine carrée ? 
+-> pour les géodésiques, la projection inverse depuis le modèle de beltrami-klein fait apparaître l'inverse d'une racine carrée, 
+et on connaît l'algorithme du q_sqrt présent dans quake 2, 
+qui calcule cette valeur environ trois fois plus vite que l'utilisation de l'inverse 
+(c'est logique d'utiliser ça ici, on a besoin de faire ce genre d'opérations assez régulièrement)
+
+
+# RÉSULTATS
+
+Avec le modèle utilisé, on doit obtenir:
+- distance entre x = (x0, x1, ..., xn) et y = (y0, y1, ..., yn) : 
+d(x,y) = cosh⁻¹(B(x,y)) avec, pour tout x dans R cosh⁻¹(x) = ln(x + sqrt(x²+1))
+-> approximation en utilisant la méthode de calcul des géodésiques

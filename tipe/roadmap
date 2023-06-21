@@ -1,0 +1,24 @@
+BARE ENGINE NEEDS : 
+
+system initializiation (window, openGL context)
+input management
+file management
+
+MORE ADVANCED NEEDS : 
+
+frame timing
+displaying (double buffer : SDL_RenderCopy, SDL_RenderPresent)
+audio management
+
+HYPERBOLIC GAME ENGINE NEEDS :
+
+physics
+rendering a hyperboloid
+movement (camera and objects)
+tiling
+
+MATH FUNCTIONS NEEDED :
+
+distance (value)
+geodesic (shortest path struct)
+matrix library
