@@ -1,0 +1,35 @@
+TIPE : ADAPTER UN MOTEUR DE JEU EN GÉOMÉTRIE NON EUCLIDIENNE
+
+À FAIRE : 
+
+1°/ Créer un moteur de jeu (avec un petit truc graphique à côté pour visualiser) 
+
+OU 
+
+"modder" unity3D pour appliquer les différences trouvées dès maintenant 
+-> (permet de skip la plupart des problèmes liés à la création d'un moteur de jeu de base)
+-> (sinon je fais mon tipe là dessus et c'est moins impressionnant mais cool quand même)
+
+cela signifie faire une première grosse partie sur comment ça fonctionne, comment on rend des trucs en 3D etc.
+
+-> ouvrir un git !!!
+
+2°/ On peut commencer par rendre un monde en 3D, mais simplement adapter les méthodes de rendu + illumination aux espaces non euclidiens (ray marching, etc)
+(i.e. comme de la rastérisation où les lignes qui "s'intersectent avec l'écran" sont en fait courbes)
+
+3°/ Réellement implémenter des éléments de physique (mouvements et interactions)
+
+
+
+RÉFÉRENCES UTILES : 
+https://en.wikipedia.org/wiki/Theory_of_relativity
+https://fr.wikipedia.org/wiki/G%C3%A9om%C3%A9trie_non_euclidienne
+https://fr.wikipedia.org/wiki/Th%C3%A9orie_des_mod%C3%A8les
+https://link.springer.com/article/10.1007/s00371-021-02303-2 (le pdf est téléchargé, voir les références associées au papier également pour avoir plus d'informations)
+Éléments Euclide (pour les postulats de base)
+https://dl.acm.org/doi/10.1145/220279.220327
+https://books.google.fr/books?hl=fr&lr=&id=40T1AwAAQBAJ&oi=fnd&pg=PR11&ots=claLBDUiLf&sig=W-l9gLgSX9g9HLu0upo6YuUPTUg&redir_esc=y#v=onepage&q&f=false
+https://arxiv.org/abs/2010.15801
+etc.
+
+FAIRE DES RECHERCHES SUR GOOGLE SCHOLAR
