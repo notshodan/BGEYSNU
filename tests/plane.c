@@ -19,6 +19,14 @@ struct point_s {
 
 typedef struct point_s point;
 
+struct pt_arr_s {
+	point** arr;
+	int len;
+};
+
+typedef struct pt_arr_s pt_arr;
+
+
 int quick_pow(float x, int exp){
 	if(exp == 0){
 		return 1;
@@ -59,12 +67,79 @@ float PDN(point a){
 	return sqrt(FBS(a, a));
 }
 
-float dist(point, point);
+float distance(point a, point b){
+	float nx = (b.x - a.x)*(b.x - a.x);
+	float ny = (b.y - a.y)*(b.y - a.y);  
+	float nz = (b.z - a.z)*(b.z - a.z);
+	return sqrt(nx + ny + nz);
+}
 
-point** line(point, point);
+float flt_abs(float x){
+	float abs = x > 0 ? x : -x;
+	return abs;
+}
 
-point* klein_proj(point);
+pt_arr* init_line(point a, point b){
+	float dist = distance(a,b);
+	int nb_interpolated_pts = dist * 50;
+	point** line = malloc(sizeof(point*) * nb_interpolated_pts); 
+	float dx = (b.x - a.x) / nb_interpolated_pts;
+	float dy = (b.y - a.y) / nb_interpolated_pts;
 
-point* poincare_proj(point);
+	for(int i = 0; i < nb_interpolated_pts; i++){
+		point* p = malloc(sizeof(point));
+		p->x = a.x + i * dx;
+		p->y = a.y + i * dy;
+		p->z = 1 ; // we'll consider the point a and b are from the klein projection
+		line[i] = p;
+	}
+	pt_arr* res = malloc(sizeof(pt_arr));
+	res->arr = line;
+	res->len = nb_interpolated_pts;
+	return res;
+}
 
-point** geodesic_approx(point, point);
+void free_pt_arr(pt_arr* ln){
+	for(int i = 0; i < ln->len; i++){
+		free(ln->arr[i]);
+	}
+	free(ln->arr);
+	free(ln);
+}
+
+point* klein_proj(point a){
+	point* p = malloc(sizeof(point));
+	p->x = a.x / a.z;
+	p->y = a.y / a.z;
+	p->z = 1;
+	return p;
+}
+
+point* poincare_proj(point a){
+	point* p = malloc(sizeof(point));
+	p->x = a.x / (a.z + 1);
+	p->y = a.y / (a.z + 1);
+	p->z = 0;
+	return p;
+}
+
+pt_arr* geodesic_approx(point a, point b){ // here suppose a and b are on the hyperboloid
+	point* ka = klein_proj(a);
+	point* kb = klein_proj(b);
+	pt_arr* line = init_line(*ka, *kb);
+	pt_arr* geodesic = malloc(sizeof(pt_arr));
+	geodesic->len = line->len;
+	geodesic->arr = malloc(sizeof(point*) * (line->len));
+	for(int i = 0; line->len; i++){
+		point pt_i = *(line->arr[i]);
+		float t = Q_rsqrt(1 - pt_i.x*pt_i.x - pt_i.y*pt_i.y);
+		point* p = malloc(sizeof(point));
+		p->x = pt_i.x * t;
+		p->y = pt_i.y * t;
+		p->z = t;
+	}
+	free_pt_arr(line);
+	free(ka);
+	free(kb);
+	return geodesic;
+}
