@@ -143,3 +143,13 @@ pt_arr* geodesic_approx(point a, point b){ // here suppose a and b are on the hy
 	free(kb);
 	return geodesic;
 }
+
+struct tile_s {
+	pt_arr* edges;
+	int val;
+	struct tile_s** chdn;
+};
+
+typedef struct tile_s tile;
+
+int nb_chdn(tile, int);
