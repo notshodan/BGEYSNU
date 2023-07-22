@@ -144,6 +144,30 @@ pt_arr* geodesic_approx(point a, point b){ // here suppose a and b are on the hy
 	return geodesic;
 }
 
+double sinh(double x){
+	return (exp(x) - exp(-x))/2;
+}
+
+double cosh(double x){
+	return (exp(x) + exp(-x))/2;
+}
+
+point* lboost(float angle, int i, int j, point v){
+	// 1 -> x, 2 -> y, 3 -> z
+	assert(i != j);
+	int k = 6 - i - j;
+	point* rv = malloc(sizeof(point));
+	double[3] pt;
+	double[3] tmp;
+	tmp[0] = v.x;
+	tmp[1] = v.y;
+	tmp[2] = v.z;
+	pt[i] = tmp[i] * cosh(a) + tmp[j] * sinh(a);
+	pt[j] = tmp[j] * cosh(a) + tmp[i] * sinh(a);
+	//...
+	return rv;
+}
+
 struct tile_s {
 	pt_arr* edges;
 	int val;

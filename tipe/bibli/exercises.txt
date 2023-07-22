@@ -1,0 +1,21 @@
+2.5.1 : Trouver les propriétés uniques qui définissent les rotations
+de la forme R^a_{i,j} et trouver l'unique vecteur L^a_{i,j} 
+qui satisfait des propriétés analogues dans le cas hyperbolique
+
+ANALYSE :
+soient ey = (O, 1), ex = (1, 0). Soit a un réel. On prend <.,.> le
+produit de minkowski (qui n'est PAS un produit scalaire,
+contrairement à son nom anglais (minkowski inner product) puisqu'il
+n'est pas défini positif):
+<x,y> = S_i=0^n-1(xi*yi) - xn*yn
+soit alors L_a * (ey) = (f1(a), f2(a)), où f1 et f2 sont dans F(R,R).
+L est une isométrie donc <L_a * (ey), L_a * (ey)> = <ey, ey> = -1
+et <ey, ey> = 0 * 0 - 1 * 1 = -1
+d'où l1(a)² - l2(a)² = -1. d'autre part, 
+| <L_a * ex , L_a * ex> = <ex , ex> = 1, et
+| <L_a * ex , L_a * ey> = <ex , ey> = 0, ie :
+
+| g1(a)² - g2(a)² = 1
+| g1(a)l1(a) - g2(a)l2(a) = 0 ie
+
+| 
