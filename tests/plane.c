@@ -11,23 +11,17 @@
 // ie (xa*x + ya*y)/za = z is the equation to the origin; we just have to take the coordinate for z = 1.
 // the projected point is therefore a_p = (xa/za, ya/za, 1)
 
-struct point_s {
-	float x;
-	float y;
-	float z;
-};
-
-typedef struct point_s point;
+typedef double point[3]; // tried it with structs, its easier that way. x->0, y->1, z->2
 
 struct pt_arr_s {
-	point** arr;
+	point* arr;
 	int len;
 };
 
 typedef struct pt_arr_s pt_arr;
 
 
-int quick_pow(float x, int exp){
+int quick_pow(double x, int exp){
 	if(exp == 0){
 		return 1;
 	}
@@ -41,56 +35,56 @@ int quick_pow(float x, int exp){
 	}
 }
 
-float Q_rsqrt(float nb){
+double Q_rsqrt(double nb){
 	long i;
-	float x2, y;
-	const float threehalfs = 1.5F;
+	double x2, y;
+	const double threehalfs = 1.5F;
 
 	x2 = nb * 0.5F;
 	y = nb;
 	i = * ( long * ) &y;
 	i = 0x5f3759df - ( i >> 1 ); 
-	y = * ( float * ) &i;
+	y = * ( double * ) &i;
 	y = y * ( threehalfs - ( x2 * y * y ) ); 
 	y = y * ( threehalfs - ( x2 * y * y ) );
 
 	return y;
 }
 
-float FBS(point a, point b){
-	float fbs;
-	fbs = (a.x * b.x) - (a.y * b.y) - (a.z - b.z);
+double FBS(point a, point b){
+	double fbs;
+	fbs = (a[0] * b[0]) - (a[1] * b[1]) - (a[2] - b[2]);
 	return fbs;
 }
 
-float PDN(point a){
+double PDN(point a){
 	return sqrt(FBS(a, a));
 }
 
-float distance(point a, point b){
-	float nx = (b.x - a.x)*(b.x - a.x);
-	float ny = (b.y - a.y)*(b.y - a.y);  
-	float nz = (b.z - a.z)*(b.z - a.z);
-	return sqrt(nx + ny + nz);
+double distance(point a, point b){
+	double nx = (b[0] - a[0]);
+	double ny = (b[1] - a[1]);  
+	double nz = (b[2] - a[2]);
+	return sqrt(nx * nx + ny * ny + nz * nz);
 }
 
-float flt_abs(float x){
-	float abs = x > 0 ? x : -x;
+double flt_abs(double x){
+	double abs = x > 0 ? x : -x;
 	return abs;
 }
 
 pt_arr* init_line(point a, point b){
-	float dist = distance(a,b);
-	int nb_interpolated_pts = dist * 50;
-	point** line = malloc(sizeof(point*) * nb_interpolated_pts); 
-	float dx = (b.x - a.x) / nb_interpolated_pts;
-	float dy = (b.y - a.y) / nb_interpolated_pts;
+	double dist = distance(a,b);
+	int nb_interpolated_pts = (int) dist * 50;
+	point* line = malloc(sizeof(point) * nb_interpolated_pts); 
+	double dx = (b.x - a.x) / nb_interpolated_pts;
+	double dy = (b.y - a.y) / nb_interpolated_pts;
 
 	for(int i = 0; i < nb_interpolated_pts; i++){
-		point* p = malloc(sizeof(point));
-		p->x = a.x + i * dx;
-		p->y = a.y + i * dy;
-		p->z = 1 ; // we'll consider the point a and b are from the klein projection
+		point p = malloc(sizeof(double) * 3);
+		p[0] = a[0] + i * dx;
+		p[1] = a[1] + i * dy;
+		p[2] = 1 ; // we'll consider the point a and b are from the klein projection
 		line[i] = p;
 	}
 	pt_arr* res = malloc(sizeof(pt_arr));
@@ -107,32 +101,33 @@ void free_pt_arr(pt_arr* ln){
 	free(ln);
 }
 
-point* klein_proj(point a){
-	point* p = malloc(sizeof(point));
-	p->x = a.x / a.z;
-	p->y = a.y / a.z;
-	p->z = 1;
+point klein_proj(point a){
+	point p = malloc(sizeof(double) * 3);
+	p[0] = a[0] / a[2];
+	p[1] = a[1] / a[2];
+	p[2] = 1;
 	return p;
 }
 
-point* poincare_proj(point a){
-	point* p = malloc(sizeof(point));
-	p->x = a.x / (a.z + 1);
-	p->y = a.y / (a.z + 1);
-	p->z = 0;
+point poincare_proj(point a){
+	point p = malloc(sizeof(double) * 3);
+	p[0] = a[0] / (a[2] + 1);
+	p[1] = a[1] / (a[2] + 1);
+	p[2] = 0;
 	return p;
 }
 
+/* 
 pt_arr* geodesic_approx(point a, point b){ // here suppose a and b are on the hyperboloid
-	point* ka = klein_proj(a);
-	point* kb = klein_proj(b);
+	point ka = klein_proj(a);
+	point kb = klein_proj(b);
 	pt_arr* line = init_line(*ka, *kb);
 	pt_arr* geodesic = malloc(sizeof(pt_arr));
 	geodesic->len = line->len;
 	geodesic->arr = malloc(sizeof(point*) * (line->len));
 	for(int i = 0; line->len; i++){
 		point pt_i = *(line->arr[i]);
-		float t = Q_rsqrt(1 - pt_i.x*pt_i.x - pt_i.y*pt_i.y);
+		double t = Q_rsqrt(1 - pt_i.x*pt_i.x - pt_i.y*pt_i.y);
 		point* p = malloc(sizeof(point));
 		p->x = pt_i.x * t;
 		p->y = pt_i.y * t;
@@ -143,6 +138,8 @@ pt_arr* geodesic_approx(point a, point b){ // here suppose a and b are on the hy
 	free(kb);
 	return geodesic;
 }
+not sure i'll need this code at all but anyways i'll have to redo it 
+*/
 
 double sinh(double x){
 	return (exp(x) - exp(-x))/2;
@@ -152,20 +149,35 @@ double cosh(double x){
 	return (exp(x) + exp(-x))/2;
 }
 
-point* lboost(float angle, int i, int j, point v){
+point lboost(double angle, int i, int j, point v){
 	// 1 -> x, 2 -> y, 3 -> z
 	assert(i != j);
+	assert((i >= 0) && (i < 3));
+	assert((j >= 0) && (j < 3));
 	int k = 6 - i - j;
-	point* rv = malloc(sizeof(point));
-	double[3] pt;
-	double[3] tmp;
-	tmp[0] = v.x;
-	tmp[1] = v.y;
-	tmp[2] = v.z;
-	pt[i] = tmp[i] * cosh(a) + tmp[j] * sinh(a);
-	pt[j] = tmp[j] * cosh(a) + tmp[i] * sinh(a);
-	//...
-	return rv;
+	point new_v = (point) malloc(sizeof(double) * 3);
+	new_v[i] = v[i] * cosh(angle) + v[j] * sinh(angle);
+	new_v[j] = v[j] * cosh(angle) + v[i] * sinh(angle);
+	new_v[k] = v[k];
+	return new_v;
+}
+
+double inr_prdh(point a, point b){
+	double mk;
+	mk = (a[0] * b[0]) + (a[1] * b[1]) - (a[2] * b[2])
+	return mk;
+}
+
+double arcosh(double x){
+	double res;
+	res = log(x + sqrt((x*x) - 1));
+	return res;
+}
+
+double disth(point x, point y){
+	double res;
+	res = arcosh(inr_prdh(x, y));
+	return res;
 }
 
 struct tile_s {
