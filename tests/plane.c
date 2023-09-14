@@ -180,6 +180,7 @@ double disth(point x, point y){
 	return res;
 }
 
+/*
 struct tile_s {
 	pt_arr* edges;
 	int val;
@@ -189,3 +190,12 @@ struct tile_s {
 typedef struct tile_s tile;
 
 int nb_chdn(tile, int);
+*/
+
+struct tile_s {
+	int type;
+	struct tile_s* move[15];
+	int spin[15];
+};
+
+typedef tile_s tile;
