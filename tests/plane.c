@@ -171,6 +171,17 @@ double inr_prdh(point a, point b){
 double arcosh(double x){
 	double res;
 	res = log(x + sqrt((x*x) - 1));
+/*
+struct tile_s {
+	pt_arr* edges;
+	int val;
+	struct tile_s** chdn;
+};
+
+typedef struct tile_s tile;
+
+int nb_chdn(tile, int);
+*/
 	return res;
 }
 
