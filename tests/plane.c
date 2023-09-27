@@ -162,7 +162,7 @@ point lboost(double angle, int i, int j, point v){
 	return new_v;
 }
 
-double inr_prdh(point a, point b){
+double mink_inr_prd(point a, point b){
 	double mk;
 	mk = (a[0] * b[0]) + (a[1] * b[1]) - (a[2] * b[2])
 	return mk;
@@ -171,6 +171,9 @@ double inr_prdh(point a, point b){
 double arcosh(double x){
 	double res;
 	res = log(x + sqrt((x*x) - 1));
+    return res;
+}
+
 /*
 struct tile_s {
 	pt_arr* edges;
@@ -182,26 +185,12 @@ typedef struct tile_s tile;
 
 int nb_chdn(tile, int);
 */
-	return res;
-}
 
 double disth(point x, point y){
 	double res;
 	res = arcosh(inr_prdh(x, y));
 	return res;
 }
-
-/*
-struct tile_s {
-	pt_arr* edges;
-	int val;
-	struct tile_s** chdn;
-};
-
-typedef struct tile_s tile;
-
-int nb_chdn(tile, int);
-*/
 
 struct tile_s {
 	int type;
