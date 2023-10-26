@@ -17,7 +17,7 @@ typedef struct cell_s {
 } cell;
 
 typedef struct walker_s {
-    cell* c;
+    cell* tile;
     int edge;
 } walker;
 
@@ -60,61 +60,6 @@ int transition_rules(cell c, int i){  // 0 : P ; -1 : L ; -2 : R ; q > 0 : Child
     return -10;
 }
 
-int valence(int type){
-    switch(type){
-        case 4:
-            return 5;
-            break;
-        case 5:
-            return 4;
-            break;
-        case 7:
-            return 3;
-            break;
-        default:
-            return 0;
-            break;
-    }
-    return 0;
-}
-
-int card_Q(int type){
-    switch(type){
-        case 4:
-            return 3;
-            break;
-        case 5:
-            return 7;
-            break;
-        case 7:
-            return 3;
-            break;
-        default:
-            return 0;
-            break;
-    }
-    return 0;
-}
-
-void incr_walker(walker* w, signed int k){
-    w->edge = (w->edge + k) % ((w->c)->type);
-}
-
-walker* init_walker(cell* c, int index){
-    walker* w = malloc(sizeof(walker));
-    w->c = c;
-    w->edge = index;
-    return w;
-}
-
-void step_walker(walker* w){
-    int i = w->c->type;
-    
-    w->cell = w->c->move[i];
-    // ... case if c = NULL !
-    w->edge = w->c->spin[i];
-}
-
 cell* NewTile(int type, int state){
     cell* n = malloc(sizeof(cell));
     n->type = type;
@@ -126,6 +71,34 @@ cell* NewTile(int type, int state){
     n->spin = calloc(sizeof(int), type);
 
     return n;
+}
+
+void incr_walker(walker* w, signed int k){
+    w->edge = (w->edge + k) % ((w->tile)->type);
+}
+
+walker* init_walker(cell* c, int index){
+    walker* w = malloc(sizeof(walker));
+    w->tile = c;
+    w->edge = index;
+    return w;
+}
+
+void step_walker(walker* w){ // w = (t, i), w + STEP := (w->t->move[i], w->t->spin[i])
+    cell* t = w->tile;
+    int i = w->edge;
+
+    if(t->move[i] == NULL){
+        t->move[i] = NewTile(t->type, transition_rules(*t, i));
+        t->spin[i] = 0;
+
+        w->tile = t->move[i];
+        w->edge = 0;
+    }
+    else{
+        w->tile = t->move[i];
+        w->edge = t->spin[i];
+    }
 }
 
 void free_tile(cell* c){
@@ -143,7 +116,7 @@ void Generate_RTS(cell* c, int range){
 
                 v->spin[0] = i;
                 v->move[0] = c;
-                c->spin[i] = x;
+                c->spin[i] = 0;
                 c->move[i] = v;
 
                 if(range > 0){
@@ -154,12 +127,12 @@ void Generate_RTS(cell* c, int range){
                 walker* w = init_walker(c, i);
                 incr_walker(w, -1);
 
-                while(transition_rules(*(w->cell), w->edge) != -2){
+                while(transition_rules(*(w->tile), w->edge) != -2){
                     step_walker(w);
                     incr_walker(w, -1);    
                 }
 
-                cell* v = w->cell;
+                cell* v = w->tile;
                 int j = w->edge;
                 
                 c->move[i] = v;
@@ -173,12 +146,12 @@ void Generate_RTS(cell* c, int range){
                 walker* w = init_walker(c, i);
                 incr_walker(w, 1);
 
-                while(transition_rules(*(w->cell), w->edge) != -1){
+                while(transition_rules(*(w->til), w->edge) != -1){
                     step_walker(w);
                     incr_walker(w, 1);
                 }
 
-                cell* v = w->cell;
+                cell* v = w->tile;
                 int j = w->edge;
 
                 c->move[i] = v;
@@ -187,6 +160,11 @@ void Generate_RTS(cell* c, int range){
                 v->spin[j] = i;
 
                 free(w);
+            }
+        }
+        else{
+            if(range > 0){
+                Generate_RTS(c->move[i], range - 1);
             }
         }
     }
