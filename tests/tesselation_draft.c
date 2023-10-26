@@ -14,7 +14,6 @@ typedef struct cell_s {
     int state;
     struct cell_s** move;    // list of neighbours
     int* spin;               // connections -- these last two fields mean that (g,i) connects to (g.move[i], g.spin[i])
-    int dist;
 } cell;
 
 typedef struct walker_s {
@@ -97,26 +96,26 @@ int card_Q(int type){
     return 0;
 }
 
-void incr_walker(walker* w, int k){
+void incr_walker(walker* w, signed int k){
     w->edge = (w->edge + k) % ((w->c)->type);
 }
 
-walker init_walker(cell* c, int index){
-    walker w = {
-        c;
-        index;
-    };
+walker* init_walker(cell* c, int index){
+    walker* w = malloc(sizeof(walker));
+    w->c = c;
+    w->edge = index;
     return w;
 }
 
 void step_walker(walker* w){
     int i = w->c->type;
-    cell* c = w->c->move[i];
-    int edge = w->c->spin[i];
+    
+    w->cell = w->c->move[i];
     // ... case if c = NULL !
+    w->edge = w->c->spin[i];
 }
 
-cell* NewTile(int type, int state, int dist){
+cell* NewTile(int type, int state){
     cell* n = malloc(sizeof(cell));
     n->type = type;
     n->state = state;
@@ -125,7 +124,6 @@ cell* NewTile(int type, int state, int dist){
         n->move[i] = NULL;
     }
     n->spin = calloc(sizeof(int), type);
-    n->dist = dist;
 
     return n;
 }
@@ -136,36 +134,59 @@ void free_tile(cell* c){
     free(c);
 }
 
-void Generate_RTS(cell* c, cell** tab, int range){
+void Generate_RTS(cell* c, int range){
     for(int i = 0; i < c->type, i++){
-        /* 
-        if((c->move[i] != NULL) && (c->spin[i] >= 0)){
-            if(c->dist + 1 < tab[c->state]->dist){
-                tab[c->state] = c->move[i];
-                Generate_RTS(c->move(i), tab, range);
-            }
-            else {
-                c->move[i] = tab[c->state];
-            }
-        }  RETARDED NONSENSE
-        */
         if(c->move[i] == NULL){
             int x = transition_rules(*c, i);
             if(x > 0){
                 cell* v = NewTile(c->type, x, c->dist + 1);
+
                 v->spin[0] = i;
                 v->move[0] = c;
                 c->spin[i] = x;
                 c->move[i] = v;
+
+                if(range > 0){
+                    Generate_RTS(v, tab, range - 1);
+                }  
             }
             if(x == -1){
-                walker w = init_walker(c, i);
+                walker* w = init_walker(c, i);
+                incr_walker(w, -1);
+
+                while(transition_rules(*(w->cell), w->edge) != -2){
+                    step_walker(w);
+                    incr_walker(w, -1);    
+                }
+
+                cell* v = w->cell;
+                int j = w->edge;
                 
+                c->move[i] = v;
+                c->spin[i] = j;
+                v->move[j] = c;
+                v->spin[j] = i;
+
+                free(w);
             }
             if(x == -2){
-                
-            }
-            if(x == 0){
+                walker* w = init_walker(c, i);
+                incr_walker(w, 1);
+
+                while(transition_rules(*(w->cell), w->edge) != -1){
+                    step_walker(w);
+                    incr_walker(w, 1);
+                }
+
+                cell* v = w->cell;
+                int j = w->edge;
+
+                c->move[i] = v;
+                c->spin[i] = j;
+                v->move[j] = c;
+                v->spin[j] = i;
+
+                free(w);
             }
         }
     }
