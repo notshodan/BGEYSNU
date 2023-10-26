@@ -193,9 +193,9 @@ double disth(point x, point y){
 }
 
 struct tile_s {
-	int type;
-	struct tile_s* move[15];
-	int spin[15];
+	int type;						//nb of neighbors to tile t
+	struct tile_s* move[15];		//t.move[i] points to the i-th neighbor of t, in clockwise order 
+	int spin[15];					//
 };
 
 typedef tile_s tile;
