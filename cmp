@@ -1,0 +1,8 @@
+#bin/sh
+
+rm ./main
+
+gcc -o main main.c tesselation.c render.c controls.c transforms.c -pedantic -lm -Wall -Werror -Wextra `sdl2-config --cflags --libs`
+echo 'Compiled without checking illegal memory access'
+
+./main 5 4
