@@ -64,16 +64,16 @@ void tile_relative_coordinates_transform(cell* t1, cell* t2, double* p){
     int i;
     double distance = 2 * center_to_edge_midpoint_distance(*t1);
 
-    for(int i_ = 0; i_ < n; i_++){
-        if(transition_rules(*t, i_) == 0){
-            i = i_;
-        }
-    }
-
     while(t != t2){
+        for(int i_ = 0; i_ < n; i_++){
+            if(transition_rules(*t, i_) == 0){
+                i = i_;
+            }
+        }
+
         int j = t->spin[i];
         rotation(TAU * i / n, 0, 1, p);
-        lboost(distance, 1, p);
+        lboost(distance, 0, p);
         rotation(- (TAU * j / n), 0, 1, p);
         t = t->move[0];
     }
