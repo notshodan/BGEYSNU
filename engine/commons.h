@@ -24,8 +24,11 @@
 #include <string.h>
 
 #define TAU (2 * M_PI)
-#define SCREEN_WIDTH 1600
-#define SCREEN_HEIGHT 900
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
+
+#define RADIUS 0.75
+
 #define MIN(a,b) (((a) < (b)) ? (a) : (b))
 #define MAX(a,b) (((b) < (a)) ? (a) : (b))
 
@@ -54,13 +57,14 @@ typedef struct {
     double* c_position;
 } Camera;
 
-Camera camera;
-
 typedef struct {
 	SDL_Renderer *renderer;
 	SDL_Window *window;
 } App;
 
-App app;
+
+extern Camera camera;
+
+extern App app;
 
 #endif

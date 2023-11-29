@@ -28,6 +28,10 @@ void lboost(double angle, int i, point v){
 	v[2] = p[2] * cosh(angle) + p[i] * sinh(angle);
 }
 
+
+/**
+ * \warning the midpoint-to-center value here is wrong : to be fixed
+*/
 double center_to_edge_midpoint_distance(cell t){
     int k;
     switch(t.type){
@@ -47,6 +51,29 @@ double center_to_edge_midpoint_distance(cell t){
     return acosh(cos(M_PI / k)/sin(M_PI / t.type));
 }
 
+double center_to_vertices_distance(cell t){
+    int k;
+    switch(t.type){
+        case 4:
+            k = 5;
+            break;
+        case 5:
+            k = 4;
+            break;
+        case 7:
+            k = 3;
+            break;
+        default :
+            exit(1);
+            break;
+    }
+    return acosh((1/tan(M_PI / t.type)) * (1/tan(M_PI / k)));
+}
+
+double minkowski_InnerProduct(double* a, double* b){
+    return a[0] * b[0] + a[1] * b[1] - a[2] * b[2];
+}
+
 /**
  * \fn void tile_relative_coordinates_transform(cell* t1, cell* t2, point p)
  * \brief Turns t1-relative coordinates for p into t2-relative coordinates. 
@@ -56,23 +83,18 @@ double center_to_edge_midpoint_distance(cell t){
  * \param t2 The tile relative to which p's coordinates are going to be translated to
  * 
  * \return None, and modifies the values of p directly
+ * 
+ * \todo This maps edge coordinates in bizarre places : to be fixed
 */
 void tile_relative_coordinates_transform(cell* t1, cell* t2, double* p){
     //printf("*\n");
     cell* t = t1;
     int n = t->type;
-    int i;
-    double distance = 2 * center_to_edge_midpoint_distance(*t1);
+    double distance = asinh(2 * center_to_edge_midpoint_distance(*t1));
+    //double distance = 1.022;
 
     while(t != t2){
-        for(int i_ = 0; i_ < n; i_++){
-            if(transition_rules(*t, i_) == 0){
-                i = i_;
-            }
-        }
-
-        int j = t->spin[i];
-        rotation(TAU * i / n, 0, 1, p);
+        int j = t->spin[0];
         lboost(distance, 0, p);
         rotation(- (TAU * j / n), 0, 1, p);
         t = t->move[0];

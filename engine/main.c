@@ -3,6 +3,9 @@
 
 #include "main.h"
 
+Camera camera;
+App app;
+
 int main(int argc, char** argv){
     assert(argc == 3);
 
