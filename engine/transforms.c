@@ -91,7 +91,7 @@ void tile_relative_coordinates_transform(cell* t1, cell* t2, double* p){
     //printf("*\n");
     cell* t = t1;
     int n = t->type;
-    double distance = asinh(2 * center_to_edge_midpoint_distance(*t1));
+    double distance = 2 * center_to_edge_midpoint_distance(*t1);
     //double distance = 1.022;
 
     while(t != t2){
