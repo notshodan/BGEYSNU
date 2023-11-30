@@ -1,5 +1,5 @@
 // Unstable Unreliable Hyperbolic Engine
-// Copyright (C) 2023-2024 Ellyas-Émile MARTINET
+// Copyright (C) 2023-2024 minsieurmoi
 
 
 // ---------- TESSELATION DRAFT ---------- //
