@@ -1,5 +1,5 @@
-// Unstable Unreliable Hyperbolic Engine
-// Copyright (C) 2023-2024 Ellyas-Émile MARTINET
+// Copyright (C) 2023-2024 minsieurmoi
+// Contact : Discord - _yopedro ; Mail - minsieurmoi@gmail.com
 
 // for now, we only work with regular tilings, ie each tesselation has only one type of tile.
 
