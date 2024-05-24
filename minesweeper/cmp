@@ -1,0 +1,5 @@
+#bin/sh
+
+gcc -o main main.c tesselation.c render.c controls.c transforms.c generation.c vectors.c -pedantic -fsanitize=address -lm -Wall -Wextra `sdl2-config --cflags --libs`  -lSDL2_image
+
+./main 7 4
